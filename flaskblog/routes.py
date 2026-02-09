@@ -1,6 +1,6 @@
 
 from flask import Flask, render_template, url_for, flash, redirect
-from flaskblog import app
+from flaskblog import app,db,bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm,PostForm
 from flaskblog.models import User, Post
 def __repr__(self):
@@ -27,10 +27,11 @@ def register():
     form = RegistrationForm()
 
     if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(
             username=form.username.data,
             email=form.email.data,
-            password=form.password.data   # later we will hash this
+            password=hashed_password   # later we will hash this
         )
 
         db.session.add(user)
